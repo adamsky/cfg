@@ -9,11 +9,15 @@ set relativenumber
 set number
 
 call plug#begin()
+Plug 'chriskempson/base16-vim'
 " Plug 'vim-airline/vim-airline'
 Plug 'dense-analysis/ale'
+"Plug 'vim-syntastic/syntastic'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-surround'
+Plug 'jiangmiao/auto-pairs'
+Plug 'tpope/vim-fugitive'
 
 " Fuzzy finder
 Plug 'junegunn/fzf'
@@ -25,9 +29,11 @@ Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'machakann/vim-highlightedyank'
 Plug 'andymass/vim-matchup'
+Plug 'terryma/vim-smooth-scroll'
 
 " Semantic language support
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'OmniSharp/omnisharp-vim'
 
 " Syntactic language support
 Plug 'cespare/vim-toml'
@@ -59,17 +65,18 @@ syntax on
 " ==========[ PLUGIN SETTINGS ]============
 
 " Lightline
-" let g:lightline = { 'colorscheme': 'wombat' }
 "let g:lightline.enable = {
 	"\ 'statusline': 1,
 	"\ 'tabline': 1
 	"\ }
+let g:lightline = { 'colorscheme': 'simpleblack' }
 let g:lightline#bufferline#show_number  = 1
 let g:lightline#bufferline#shorten_path = 0
 let g:lightline#bufferline#unnamed      = '[No Name]'
 
-let g:lightline = { 'component_function': { 'filename': 'LightlineFilename' } }
-let g:lightline.tabline          = {'left': [['buffers']], 'right': [['close']]}
+"let g:lightline = { 'component_function': { 'filename': 'LightlineFilename' } }
+let g:lightline.component_function = { 'filename': 'LightlineFilename' }
+let g:lightline.tabline          = {'left': [['buffers']], 'right': [['not']]}
 let g:lightline.component_expand = {'buffers': 'lightline#bufferline#buffers'}
 let g:lightline.component_type   = {'buffers': 'tabsel'}
 " use lightline-buffer in lightline
@@ -109,7 +116,32 @@ endfunction
 set hidden  " allow buffer switching without saving
 set showtabline=2  " always show tabline
 
+" NERDTree
+nmap <C-n> :NERDTreeToggle<CR>
 
+" rooter
+"let g:rooter_manual_only = 1
+
+" Smooth scroll
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 7, 2)<CR>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 7, 2)<CR>
+noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 8, 4)<CR>
+noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 8, 4)<CR>
+
+" Apply RustFmt on write
+let g:rustfmt_autosave = 1
+
+"let g:ale_cs_mcsc_assemblies = [
+    "\ '/home/admsky/apps/unity/2018.4.15f1/Managed/UnityEngine.dll',
+    ""\ '/home/admsky/apps/unity/2018.4.15f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll',
+    "\ '/home/admsky/projects/anthropocene/obj/Debug/*',
+    "\]
+
+let g:ale_linters = {
+\ 'cs': ['OmniSharp']
+\}
+let g:OmniSharp_server_stdio = 1
+let g:OmniSharp_selector_ui = 'fzf'    " Use fzf.vim
 
 " =============================================================================
 " # Editor settings
@@ -120,18 +152,19 @@ set timeoutlen=300 " http://stackoverflow.com/questions/2158516/delay-before-o-o
 set encoding=utf-8
 set scrolloff=2
 set noshowmode
-set hidden
 set nowrap
 set nojoinspaces
 let g:sneak#s_next = 1
 let g:vim_markdown_new_list_item_indent = 0
 let g:vim_markdown_auto_insert_bullets = 0
 let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_folding_disabled = 1
 set printfont=:h10
 set printencoding=utf-8
 set printoptions=paper:letter
 " Always draw sign column. Prevent buffer moving when adding/deleting sign.
 set signcolumn=yes
+hi SignColumn ctermfg=14 ctermbg=None
 
 " Settings needed for .lvimrc
 "set exrc
@@ -168,6 +201,26 @@ set incsearch
 set ignorecase
 set smartcase
 set gdefault
+
+" markdown wrapping
+autocmd Filetype markdown setlocal wrap
+autocmd Filetype markdown setlocal linebreak
+autocmd Filetype markdown setlocal nolist
+"autocmd Filetype markdown setlocal columns=80
+
+
+" " Copy to clipboard
+vnoremap  <leader>y  "*y
+nnoremap  <leader>Y  "*yg_
+nnoremap  <leader>y  "*y
+nnoremap  <leader>yy  "*yy
+
+" " Paste from clipboard
+nnoremap <leader>p "*p
+nnoremap <leader>P "*P
+vnoremap <leader>p "*p
+vnoremap <leader>P "*P
+
 
 " Search results centered please
 nnoremap <silent> n nzz
@@ -215,6 +268,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <silent> rr <Plug>(coc-rename)
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 function! s:show_documentation()

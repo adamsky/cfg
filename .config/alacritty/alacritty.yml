@@ -100,19 +100,11 @@
 #tabspaces: 8
 
 # Font configuration
-#font:
+font:
   # Normal (roman) font face
-  #normal:
-    # Font family
-    #
-    # Default:
-    #   - (macOS) Menlo
-    #   - (Linux) monospace
-    #   - (Windows) Consolas
-    #family: monospace
-
-    # The `style` can be specified to pick a specific face.
-    #style: Regular
+  normal:
+    family: DroidSansMono Nerd Font
+    style: Regular
 
   # Bold font face
   #bold:
@@ -364,10 +356,11 @@ colors:
 #   - (macOS) /bin/bash --login
 #   - (Linux) user login shell
 #   - (Windows) powershell
-#shell:
-#  program: /bin/bash
-#  args:
-#    - --login
+shell:
+  program: /usr/bin/fish
+  args:
+    - -c
+    - tmux
 
 # Startup directory
 #
