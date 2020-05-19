@@ -9,7 +9,8 @@ set relativenumber
 set number
 
 call plug#begin()
-Plug 'chriskempson/base16-vim'
+"Plug 'chriskempson/base16-vim'
+Plug 'Soares/base16.nvim'
 " Plug 'vim-airline/vim-airline'
 Plug 'dense-analysis/ale'
 "Plug 'vim-syntastic/syntastic'
@@ -22,6 +23,7 @@ Plug 'tpope/vim-fugitive'
 " Fuzzy finder
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'mileszs/ack.vim'
 Plug 'airblade/vim-rooter'
 
 " GUI enhancements
@@ -44,6 +46,8 @@ Plug 'dag/vim-fish'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 
+Plug '~/.config/nvim/plugged/outcomescript.vim'
+
 call plug#end()
 
 
@@ -51,16 +55,26 @@ call plug#end()
 if !has('gui_running')
   set t_Co=256
 endif
-if (match($TERM, "-256color") != -1) && (match($TERM, "screen-256color") == -1)
-  " screen does not (yet) support truecolor
-  set termguicolors
-endif
+"if (match($TERM, "-256color") != -1) && (match($TERM, "screen-256color") == -1)
+  "" screen does not (yet) support truecolor
+  "set termguicolors
+"endif
+set termguicolors
 " Colors
 set background=dark
-" colorscheme base16-gruvbox-dark-hard
-hi Normal ctermbg=NONE
+"colorscheme base16-gruvbox-dark-hard
+colorscheme atelier-plateau 
+hi NormalFloat term=NONE guifg=#fffeeb ctermbg=235
+" ctermfg=.s:fg_cterm guibg=.s:bgweaker_gui
+"hi Normal ctermbg=NONE
+"hi Pmenu guibg=red
+"hi Pmenu ctermbg=darkgray
 " Get syntax
 syntax on
+
+" set colorcolumn
+set colorcolumn=100
+hi ColorColumn ctermbg=7 guibg=#262626
 
 " ==========[ PLUGIN SETTINGS ]============
 
@@ -184,9 +198,9 @@ set wildmode=list:longest
 set wildignore=.hg,.svn,*~,*.png,*.jpg,*.gif,*.settings,Thumbs.db,*.min.js,*.swp,publish/*,intermediate/*,*.o,*.hi,Zend,vendor
 
 " Use wide tabs
-set shiftwidth=8
-set softtabstop=8
-set tabstop=8
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
 set noexpandtab
 
 " Wrapping options
@@ -210,16 +224,16 @@ autocmd Filetype markdown setlocal nolist
 
 
 " " Copy to clipboard
-vnoremap  <leader>y  "*y
-nnoremap  <leader>Y  "*yg_
-nnoremap  <leader>y  "*y
-nnoremap  <leader>yy  "*yy
+vnoremap  <leader>y  "+y
+nnoremap  <leader>Y  "+yg_
+nnoremap  <leader>y  "+y
+nnoremap  <leader>yy  "+yy
 
 " " Paste from clipboard
-nnoremap <leader>p "*p
-nnoremap <leader>P "*P
-vnoremap <leader>p "*p
-vnoremap <leader>P "*P
+nnoremap <leader>p "+p
+nnoremap <leader>P "+P
+vnoremap <leader>p "+p
+vnoremap <leader>P "+P
 
 
 " Search results centered please
@@ -244,9 +258,12 @@ inoremap <down> <nop>
 inoremap <left> <nop>
 inoremap <right> <nop>
 
-" Left and right can switch buffers
+" Switch buffers quickly
 nnoremap <left> :bp<CR>
 nnoremap <right> :bn<CR>
+nnoremap <C-h> :bp<CR>
+nnoremap <C-l> :bn<CR>
+
 
 " Move by line
 nnoremap j gj
